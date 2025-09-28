@@ -59,7 +59,7 @@ export const GET: APIRoute = async ({ request }) => {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const body = await request.json();
+    const body = await request.json() as any;
     const roomId = crypto.randomUUID().substring(0, 8);
     const roomName = body.name || `聊天室-${Date.now()}`;
     

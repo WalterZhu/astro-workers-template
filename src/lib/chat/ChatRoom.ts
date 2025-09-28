@@ -1,3 +1,5 @@
+/// <reference types="@cloudflare/workers-types" />
+
 import type { 
   ChatMessage, 
   ChatUser, 
