@@ -8,5 +8,29 @@
       "pattern": "astro.wildcloud.app",
       "custom_domain": true
     }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "CHATROOM", "class_name": "ChatRoom" }
+    ]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "f1e7a080046440dda1f91989cb5c5188"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ADVENTURE-DB",
+      "database_id": "c6751c35-67ff-4fc3-a183-52cbfa7f58ee"
+    }
+  ],
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["ChatRoom"]
+    }
   ]
 }

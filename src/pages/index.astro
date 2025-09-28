@@ -1,16 +1,62 @@
 ---
-
+import Chat from '../components/Chat.astro';
 ---
 
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Astro 聊天室</title>
+		<style>
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				margin: 0;
+				padding: 20px;
+				background: #f5f5f5;
+			}
+			.container {
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+			.header {
+				text-align: center;
+				margin-bottom: 2rem;
+			}
+			.header h1 {
+				color: #333;
+				margin-bottom: 0.5rem;
+			}
+			.header p {
+				color: #666;
+				font-size: 1.1rem;
+			}
+			.chat-section {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 2rem;
+				max-width: 800px;
+				margin: 0 auto;
+			}
+			@media (min-width: 768px) {
+				.chat-section {
+					grid-template-columns: 1fr 1fr;
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<div class="container">
+			<div class="header">
+				<h1>🚀 Astro 聊天室</h1>
+				<p>基于 Astro + Cloudflare Workers 的实时聊天应用</p>
+			</div>
+			
+			<div class="chat-section">
+				<Chat roomId="general" />
+				<Chat roomId="tech" />
+			</div>
+		</div>
 	</body>
 </html>
