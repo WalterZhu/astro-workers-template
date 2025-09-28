@@ -1,5 +1,5 @@
 {
-  "name": "my-astro-project",
+  "name": "astro-workers-template",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -9,6 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.14.1"
+    "@astrojs/cloudflare": "^12.6.9",
+    "astro": "^5.14.1",
+    "wrangler": "^4.40.2"
   }
 }
