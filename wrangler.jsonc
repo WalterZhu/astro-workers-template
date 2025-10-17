@@ -25,5 +25,9 @@
       "database_name": "DEV_D1",
       "database_id": "b7c750eb-6345-4b24-8666-0aa380232c77"
     }
-  ]
+  ],
+  "assets": {
+    "directory": "./public/",
+    "binding": "ASSETS"
+  }
 }
