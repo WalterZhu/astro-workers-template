@@ -1,0 +1,297 @@
+---
+export const prerender = false;
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>用户注册 - Astro Template</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .auth-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .auth-header h1 {
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+      }
+
+      .auth-header p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .alert {
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+
+      .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+
+      .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e1e5e9;
+      }
+
+      .auth-footer a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .auth-footer a:hover {
+        text-decoration: underline;
+      }
+
+      .required {
+        color: #ef4444;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-header">
+        <h1>创建账户</h1>
+        <p>加入 Astro Template，开始您的应用之旅</p>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label for="name">
+            姓名 <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="请输入您的姓名"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">
+            邮箱地址 <span class="required">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="请输入您的邮箱地址"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+            密码 <span class="required">*</span>
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="请输入密码（至少6位）"
+            minlength="6"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">
+            确认密码 <span class="required">*</span>
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            required
+            placeholder="请再次输入密码"
+          />
+        </div>
+
+        <button type="submit" class="btn">
+          创建账户
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>已有账户？ <a href="/">立即登录</a></p>
+      </div>
+    </div>
+
+    <script type="module" is:inline>
+      // 注册功能
+      const registerForm = document.getElementById('register-form');
+      const alertContainer = document.getElementById('alert-container');
+      const password = document.getElementById('password');
+      const confirmPassword = document.getElementById('confirmPassword');
+
+      // 显示提示信息
+      function showAlert(message, type = 'error') {
+        alertContainer.innerHTML = `
+          <div class="alert alert-${type}">
+            ${message}
+          </div>
+        `;
+      }
+
+      // 密码确认验证
+      function validatePassword() {
+        if (confirmPassword.value && password.value !== confirmPassword.value) {
+          confirmPassword.setCustomValidity('密码不匹配');
+        } else {
+          confirmPassword.setCustomValidity('');
+        }
+      }
+
+      password.addEventListener('input', validatePassword);
+      confirmPassword.addEventListener('input', validatePassword);
+
+      // 注册表单提交
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(registerForm);
+        const email = formData.get('email');
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirmPassword');
+        const name = formData.get('name');
+
+        // 基本验证
+        if (!email || !password || !name) {
+          showAlert('请填写所有必填字段');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showAlert('密码确认不匹配');
+          return;
+        }
+
+        if (password.length < 6) {
+          showAlert('密码长度至少6位');
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email,
+              password,
+              name,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            showAlert('注册成功！正在跳转到登录页面...', 'success');
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 2000);
+          } else {
+            showAlert(result.error || '注册失败，请重试');
+          }
+        } catch (error) {
+          showAlert('注册过程中发生错误，请重试');
+        }
+      });
+    </script>
+  </body>
+</html>

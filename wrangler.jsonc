@@ -1,36 +1,29 @@
 {
-  "name": "astro-workers-template",
-  "main": "worker.js",
+  "name": "astro-template",
+  "main": "dist/_worker.js/index.js",
   "compatibility_date": "2025-03-01",
   "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
   "routes": [
     {
       "pattern": "astro.wildcloud.app",
       "custom_domain": true
     }
   ],
-  "durable_objects": {
-    "bindings": [
-      { "name": "CHATROOM", "class_name": "ChatRoom" }
-    ]
-  },
   "kv_namespaces": [
     {
       "binding": "KV",
-      "id": "f1e7a080046440dda1f91989cb5c5188"
+      "id": "93600aaf5e0146c88ad937c794b4e1e6"
     }
   ],
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "ADVENTURE-DB",
-      "database_id": "c6751c35-67ff-4fc3-a183-52cbfa7f58ee"
-    }
-  ],
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_classes": ["ChatRoom"]
+      "database_name": "DEV_D1",
+      "database_id": "b7c750eb-6345-4b24-8666-0aa380232c77"
     }
   ]
 }

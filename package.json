@@ -1,15 +1,18 @@
 {
-  "name": "astro-workers-template",
+  "name": "astro-template",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "deploy": "npm run build && wrangler deploy",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.9",
+    "@auth/core": "^0.40.0",
+    "@auth/d1-adapter": "^1.10.0",
     "astro": "^5.14.1",
     "wrangler": "^4.40.2"
   },
