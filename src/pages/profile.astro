@@ -4,11 +4,8 @@ export const prerender = false;
 // 从中间件获取用户ID
 const userId = (Astro.locals as any).user?.id;
 
-console.log('[PROFILE] User ID from middleware:', userId || 'not found');
-
 if (!userId) {
-  console.log('[PROFILE] No user session found, redirecting to login');
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 
 // 获取运行时环境
@@ -16,28 +13,23 @@ const runtime = (Astro.locals as any).runtime;
 let userData: any = null;
 let profileData: any = null;
 
-console.log('[PROFILE] Runtime available:', !!runtime?.env?.DB);
-
-// 直接使用从middleware获取的userId查询数据库
 if (userId && runtime?.env?.DB) {
   try {
-    console.log('[PROFILE] Querying database for user:', userId);
-    
     // 查询用户基本信息
-    userData = await runtime.env.DB.prepare(
+    userData = (await runtime.env.DB.prepare(
       "SELECT id, name, email, image FROM users WHERE id = ?"
-    ).bind(userId).first() as any;
-    
-    console.log('[PROFILE] User data found:', !!userData);
-    
+    )
+      .bind(userId)
+      .first()) as any;
+
     // 查询用户配置信息
-    profileData = await runtime.env.DB.prepare(
+    profileData = (await runtime.env.DB.prepare(
       "SELECT bio, avatar, theme, language FROM user_profiles WHERE userId = ?"
-    ).bind(userId).first() as any;
-    
-    console.log('[PROFILE] Profile data found:', !!profileData);
+    )
+      .bind(userId)
+      .first()) as any;
   } catch (error) {
-    console.error('[PROFILE] Database query error:', error);
+    console.error("[PROFILE] Database query error:", error);
   }
 }
 
@@ -46,22 +38,19 @@ const defaultUserData = {
   id: "",
   name: "",
   email: "",
-  image: null
+  image: null,
 };
 
 const defaultProfileData = {
   bio: "",
   avatar: "",
   theme: "light",
-  language: "zh-CN"
+  language: "zh-CN",
 };
 
 // 优先使用数据库数据，其次使用默认数据
 const finalUserData = userData || defaultUserData;
 const finalProfileData = profileData || defaultProfileData;
-
-console.log('[PROFILE] Final user data:', finalUserData.name);
-console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
 ---
 
 <html lang="zh-CN">
@@ -73,7 +62,8 @@ console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
     <title>个人资料 - Astro Template</title>
     <style>
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
         margin: 0;
         padding: 20px;
         background: #f5f5f5;
@@ -269,11 +259,11 @@ console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
         .form-grid {
           grid-template-columns: 1fr;
         }
-        
+
         .container {
           margin: 10px;
         }
-        
+
         .header,
         .content {
           padding: 1rem;
@@ -303,16 +293,18 @@ console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
         <form id="profile-form">
           <div class="profile-section">
             <h2>基本信息</h2>
-            
+
             <div class="form-group">
               <label>头像</label>
               <div class="avatar-section">
                 <div class="avatar-preview" id="avatar-preview">
-                  {finalProfileData.avatar ? (
-                    <img src={finalProfileData.avatar} alt="用户头像" />
-                  ) : (
-                    finalUserData.name?.charAt(0) || "U"
-                  )}
+                  {
+                    finalProfileData.avatar ? (
+                      <img src={finalProfileData.avatar} alt="用户头像" />
+                    ) : (
+                      finalUserData.name?.charAt(0) || "U"
+                    )
+                  }
                 </div>
                 <div>
                   <input
@@ -322,7 +314,9 @@ console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
                     placeholder="头像图片URL"
                     value={finalProfileData.avatar || ""}
                   />
-                  <small style="color: #666; display: block; margin-top: 0.25rem;">
+                  <small
+                    style="color: #666; display: block; margin-top: 0.25rem;"
+                  >
                     输入图片URL，留空使用默认头像
                   </small>
                 </div>
@@ -357,43 +351,62 @@ console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
 
             <div class="form-group full-width">
               <label for="bio">个人简介</label>
-              <textarea
-                id="bio"
-                name="bio"
-                placeholder="介绍一下您自己..."
-                value={finalProfileData.bio || ""}
-              ></textarea>
+              <textarea id="bio" name="bio" placeholder="介绍一下您自己..."
+                >{finalProfileData.bio || ""}</textarea
+              >
             </div>
           </div>
 
           <div class="profile-section">
             <h2>偏好设置</h2>
-            
+
             <div class="form-grid">
               <div class="form-group">
                 <label for="theme">主题</label>
                 <select id="theme" name="theme">
-                  <option value="light" selected={finalProfileData.theme === 'light'}>浅色主题</option>
-                  <option value="dark" selected={finalProfileData.theme === 'dark'}>深色主题</option>
-                  <option value="auto" selected={finalProfileData.theme === 'auto'}>跟随系统</option>
+                  <option
+                    value="light"
+                    selected={finalProfileData.theme === "light"}
+                    >浅色主题</option
+                  >
+                  <option
+                    value="dark"
+                    selected={finalProfileData.theme === "dark"}
+                    >深色主题</option
+                  >
+                  <option
+                    value="auto"
+                    selected={finalProfileData.theme === "auto"}
+                    >跟随系统</option
+                  >
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="language">语言</label>
                 <select id="language" name="language">
-                  <option value="zh-CN" selected={finalProfileData.language === 'zh-CN'}>简体中文</option>
-                  <option value="en" selected={finalProfileData.language === 'en'}>English</option>
+                  <option
+                    value="zh-CN"
+                    selected={finalProfileData.language === "zh-CN"}
+                    >简体中文</option
+                  >
+                  <option
+                    value="en"
+                    selected={finalProfileData.language === "en"}
+                    >English</option
+                  >
                 </select>
               </div>
             </div>
           </div>
 
           <div class="btn-group">
-            <button type="submit" class="btn btn-primary">
-              保存更改
-            </button>
-            <button type="button" class="btn btn-secondary" onclick="location.reload()">
+            <button type="submit" class="btn btn-primary"> 保存更改 </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="location.reload()"
+            >
               重置
             </button>
           </div>
@@ -403,27 +416,26 @@ console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
 
     <script type="module" is:inline>
       // 页面元素
-      const avatarInput = document.getElementById('avatar');
-      const avatarPreview = document.getElementById('avatar-preview');
-      const alertContainer = document.getElementById('alert-container');
-      const profileForm = document.getElementById('profile-form');
-      const logoutBtn = document.getElementById('logout-btn');
+      const avatarInput = document.getElementById("avatar");
+      const avatarPreview = document.getElementById("avatar-preview");
+      const alertContainer = document.getElementById("alert-container");
+      const profileForm = document.getElementById("profile-form");
+      const logoutBtn = document.getElementById("logout-btn");
 
       // 显示提示信息
-      function showAlert(message, type = 'error') {
+      function showAlert(message, type = "error") {
         alertContainer.innerHTML = `
           <div class="alert alert-${type}">
             ${message}
           </div>
         `;
-        alertContainer.scrollIntoView({ behavior: 'smooth' });
+        alertContainer.scrollIntoView({ behavior: "smooth" });
       }
 
       // 数据已在服务器端加载，无需客户端API调用
-      console.log('[PROFILE] Data loaded from server-side rendering');
 
       // 头像URL变化时更新预览
-      avatarInput.addEventListener('input', (e) => {
+      avatarInput.addEventListener("input", (e) => {
         const url = e.target.value.trim();
         if (url) {
           const img = new Image();
@@ -431,31 +443,31 @@ console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
             avatarPreview.innerHTML = `<img src="${url}" alt="用户头像" />`;
           };
           img.onerror = () => {
-            avatarPreview.innerHTML = 'U';
+            avatarPreview.innerHTML = "U";
           };
           img.src = url;
         } else {
-          avatarPreview.innerHTML = 'U';
+          avatarPreview.innerHTML = "U";
         }
       });
 
       // 表单提交
-      profileForm.addEventListener('submit', async (e) => {
+      profileForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData(profileForm);
         const profileData = {
-          avatar: formData.get('avatar'),
-          bio: formData.get('bio'),
-          theme: formData.get('theme'),
-          language: formData.get('language')
+          avatar: formData.get("avatar"),
+          bio: formData.get("bio"),
+          theme: formData.get("theme"),
+          language: formData.get("language"),
         };
 
         try {
-          const response = await fetch('/api/profile', {
-            method: 'POST',
+          const response = await fetch("/api/profile", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(profileData),
           });
@@ -463,69 +475,60 @@ console.log('[PROFILE] Final profile data theme:', finalProfileData.theme);
           const result = await response.json();
 
           if (response.ok && result.success) {
-            showAlert('个人资料更新成功！', 'success');
+            showAlert("个人资料更新成功！", "success");
           } else {
-            showAlert(result.error || '更新失败，请重试');
+            showAlert(result.error || "更新失败，请重试");
           }
         } catch (error) {
-          showAlert('更新失败，请重试');
+          showAlert("更新失败，请重试");
         }
       });
 
       // 获取 CSRF 令牌
       async function getCsrfToken() {
         try {
-          const response = await fetch('/api/auth/csrf');
+          const response = await fetch("/api/auth/csrf");
           const data = await response.json();
           return data.csrfToken;
         } catch (error) {
-          console.error('Failed to get CSRF token:', error);
-          return '';
+          return "";
         }
       }
 
       // 退出登录
-      logoutBtn.addEventListener('click', async () => {
+      logoutBtn.addEventListener("click", async () => {
         try {
-          console.log('[PROFILE] Logging out...');
-          
           // 获取CSRF token
           const csrfToken = await getCsrfToken();
-          console.log('[PROFILE] CSRF token obtained:', csrfToken ? 'yes' : 'no');
-          
+
           // 调用Auth.js signout端点
-          const response = await fetch('/api/auth/signout', {
-            method: 'POST',
+          const response = await fetch("/api/auth/signout", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
+              "Content-Type": "application/x-www-form-urlencoded",
             },
             body: new URLSearchParams({
               csrfToken: csrfToken,
-              callbackUrl: window.location.origin
-            }).toString()
+              callbackUrl: window.location.origin,
+            }).toString(),
           });
-          
-          console.log('[PROFILE] Signout response status:', response.status);
-          
+
           if (response.ok) {
-            showAlert('正在退出登录...', 'success');
+            showAlert("正在退出登录...", "success");
             // 延迟跳转，让用户看到提示信息
             setTimeout(() => {
-              window.location.href = '/';
+              window.location.href = "/";
             }, 1000);
           } else {
-            const errorText = await response.text();
-            console.log('[PROFILE] Signout error response:', errorText);
-            throw new Error('Logout failed');
+            throw new Error("Logout failed");
           }
         } catch (error) {
-          console.error('[PROFILE] Logout error:', error);
-          showAlert('退出登录失败，请重试');
+          console.error("[PROFILE] Logout error:", error);
+          showAlert("退出登录失败，请重试");
         }
       });
 
       // 页面初始化完成
-      console.log('[PROFILE] Client-side initialization complete');
     </script>
   </body>
 </html>

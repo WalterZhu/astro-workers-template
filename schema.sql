@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS "accounts" (
 -- 用户配置表
 CREATE TABLE IF NOT EXISTS "user_profiles" (
     "id" text NOT NULL,
-    "userId" text NOT NULL,
+    "userId" text NOT NULL UNIQUE,
     "bio" text,
     "avatar" text,
     "theme" text DEFAULT 'light',

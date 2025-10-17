@@ -3,7 +3,7 @@ import { validateSession } from "./lib/session";
 import type { CloudflareEnv } from "./env";
 
 // 需要认证的路径
-const protectedPaths = ["/profile"];
+const protectedPaths = ["/profile", "/api/profile"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { url, request } = context;
